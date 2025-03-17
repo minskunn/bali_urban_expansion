@@ -99,3 +99,36 @@ Map.addLayer(
   { min: 0, max: 1, palette: ["white", "red"] },
   "Urban Expansion (Coastal)"
 );
+
+var predictors = ee.Image.cat([
+  distToUrban2019.rename("Dist_to_Urban"),
+  urbanExpansion.rename("Urban_Growth"), // Target variable
+]);
+
+// Sample urban expansion pixels
+var urbanSamples = predictors.stratifiedSample({
+  numPoints: 160000,
+  classBand: "Urban_Growth",
+  scale: 10,
+  seed: 42,
+});
+
+// Sample non-urban pixels
+var nonUrbanSamples = predictors
+  .stratifiedSample({
+    numPoints: 160000,
+    classBand: "Urban_Growth",
+    scale: 10,
+    seed: 42,
+  })
+  .filter(ee.Filter.neq("Urban_Growth", 1)); // Ensure only non-urban samples
+
+// Merge sample sets
+var samples = urbanSamples.merge(nonUrbanSamples);
+
+// Export the samples as CSV
+Export.table.toDrive({
+  collection: samples,
+  description: "UrbanExpansion_Predictors",
+  fileFormat: "CSV",
+});
