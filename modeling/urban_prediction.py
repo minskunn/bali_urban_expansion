@@ -6,8 +6,15 @@ from sklearn.metrics import accuracy_score
 df = pd.read_csv('samplesWithCoordinates.csv')
 print(df.head())  # Check the first few rows
 
-X = df[['Distance_to_2019', 'LandCover_2019']]
+df['Change_in_Distance'] = df['Distance_to_2024'] - df['Distance_to_2019']
+df['Change_in_LandCover'] = df['LandCover_2024'] - df['LandCover_2019']
+
+#X = df[['Distance_to_2019', 'LandCover_2019']]
+#y = df['LandCover_2024']
+
+X = df[['Distance_to_2019', 'LandCover_2019', 'Change_in_Distance', 'Change_in_LandCover']]
 y = df['LandCover_2024']
+
 
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
@@ -42,7 +49,7 @@ print("Feature Importances:", importances)
 df_AOI['LandCover_2029'] = model.predict(X_2029)
 
 # Save the results
-#df_AOI.to_csv('predicted_AOI_2029.csv', index=False)
+df_AOI.to_csv('predicted_AOI_2029.csv', index=False)
 
 print("Prediction complete. CSV saved as 'predicted_AOI_2029.csv'.")
 
