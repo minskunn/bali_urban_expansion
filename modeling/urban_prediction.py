@@ -22,10 +22,27 @@ accuracy = accuracy_score(y_test, y_pred)
 
 print("Model Accuracy:", accuracy)
 
-df_2029 = df.copy()  # Copy the existing dataset
+df_AOI = pd.read_csv('Full_AOI_Predictors_2024.csv') 
+print(df_AOI.head())  # Verify structure
 
-X_2029 = df_2029[['Distance_to_2024', 'LandCover_2024']]
+#Rename columns temp to avoid error
+df_AOI = df_AOI.rename(columns={'Distance_to_2024': 'Distance_to_2019', 
+                                'LandCover_2024': 'LandCover_2019'})
 
-df_2029['LandCover_2029'] = model.predict(X_2029)
+# Prepare features
+X_2029 = df_AOI[['Distance_to_2019', 'LandCover_2019']]
 
+print(X_2029.head())
+
+importances = model.feature_importances_
+print("Feature Importances:", importances)
+
+
+# Predict 2029 land cover
+df_AOI['LandCover_2029'] = model.predict(X_2029)
+
+# Save the results
+#df_AOI.to_csv('predicted_AOI_2029.csv', index=False)
+
+print("Prediction complete. CSV saved as 'predicted_AOI_2029.csv'.")
 
