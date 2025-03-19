@@ -2,6 +2,7 @@ import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.ensemble import GradientBoostingClassifier
+from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score
 
 df = pd.read_csv('samplesWithCoordinates.csv')
@@ -23,7 +24,8 @@ print("Training set size:", X_train.shape)
 print("Test set size:", X_test.shape)
 
 #model = RandomForestClassifier(n_estimators=100, random_state=42)
-model = GradientBoostingClassifier(n_estimators=200, learning_rate=0.1, random_state=42)
+#model = GradientBoostingClassifier(n_estimators=200, learning_rate=0.1, random_state=42)
+model = LogisticRegression()
 model.fit(X_train, y_train)
 
 y_pred = model.predict(X_test)
@@ -43,14 +45,11 @@ X_2029 = df_AOI[['Distance_to_2019', 'LandCover_2019']]
 
 print(X_2029.head())
 
-importances = model.feature_importances_
-print("Feature Importances:", importances)
-
 # Predict 2029 land cover
 df_AOI['LandCover_2029'] = model.predict(X_2029)
 
 # Save the results
-df_AOI.to_csv('predicted_AOI_2029_GB.csv', index=False)
+df_AOI.to_csv('predicted_AOI_2029_LR.csv', index=False)
 
 print("Prediction complete. CSV saved as 'predicted_AOI_2029.csv'.")
 
