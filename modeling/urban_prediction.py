@@ -23,6 +23,10 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_
 print("Training set size:", X_train.shape)
 print("Test set size:", X_test.shape)
 
+print(df['LandCover_2019'].value_counts())
+print(df['LandCover_2024'].value_counts())
+
+
 #model = RandomForestClassifier(n_estimators=100, random_state=42)
 #model = GradientBoostingClassifier(n_estimators=200, learning_rate=0.1, random_state=42)
 model = LogisticRegression()
@@ -49,7 +53,7 @@ print(X_2029.head())
 df_AOI['LandCover_2029'] = model.predict(X_2029)
 
 # Save the results
-df_AOI.to_csv('predicted_AOI_2029_LR.csv', index=False)
+#df_AOI.to_csv('predicted_AOI_2029_LR.csv', index=False)
 
 print("Prediction complete. CSV saved as 'predicted_AOI_2029.csv'.")
 
