@@ -30,6 +30,9 @@ with rasterio.open(output_raster) as src:
     urban_raster = src.read(1)  # Read the first band
     transform = src.transform  # Spatial reference info
     pixel_size = src.res[0] * src.res[1] #Calc pixel size
+    total_pixels = src.width * src.height  # Total number of pixels in the raster
+    pixel_size = src.res[0] * src.res[1]  # Size of a single pixel in square meters
+    total_area_km2 = (total_pixels * pixel_size) / 1_000_000  # Convert from m² to km²
 
 #Convert Urban Areas to Binary (1 = urban, 0 = non-urban)
 urban_binary = (urban_raster == 2).astype(np.uint8)  
@@ -47,7 +50,8 @@ cluster_areas = cluster_sizes * pixel_size
 
 # Calculate statistics
 total_area = np.sum(cluster_areas)  # Total area of all urban clusters (m²)
-average_cluster_size = np.mean(cluster_areas)  # Average cluster size (m²)
+average_mean_cluster_size = np.mean(cluster_areas)  # Average mean cluster size (m²)
+average_median_cluster_size = np.median(cluster_areas)  # Average median cluster size (m²)
 largest_cluster = np.max(cluster_areas)  # Largest cluster size (m²)
 smallest_cluster = np.min(cluster_areas)  # Smallest cluster size (m²)
 
@@ -58,9 +62,11 @@ print(f"CRS: {src.crs}")  # Print Coordinate Reference System (CRS)
 
 
 # Print statistics
+print(f"Total Area of Raster (km²): {total_area_km2}")
 print(f"Total Urban Clusters: {num_clusters}")
 print(f"Total Urban Area (m²): {total_area}")
-print(f"Average Cluster Size (m²): {average_cluster_size}")
+print(f"Average Mean Cluster Size (m²): {average_mean_cluster_size}")
+print(f"Average Median Cluster Size (m²): {average_median_cluster_size}")
 print(f"Largest Cluster Size (m²): {largest_cluster}")
 print(f"Smallest Cluster Size (m²): {smallest_cluster}")
 
