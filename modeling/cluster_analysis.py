@@ -28,6 +28,11 @@ print(f"Raster reprojected to: {target_crs}")
 
 with rasterio.open(output_raster) as src:
     urban_raster = src.read(1)  # Read the first band
+    nodata_value = src.nodata  # Retrieve the NoData value for the raster
+    
+    # Mask NoData pixels
+    urban_raster = np.ma.masked_equal(urban_raster, nodata_value)
+
     transform = src.transform  # Spatial reference info
     pixel_size = src.res[0] * src.res[1] #Calc pixel size
     total_pixels = src.width * src.height  # Total number of pixels in the raster
@@ -60,9 +65,16 @@ print(f"Spatial Resolution (src.res): {src.res}")
 print(f"Pixel Size (square meters): {pixel_size}")
 print(f"CRS: {src.crs}")  # Print Coordinate Reference System (CRS)
 
+plt.imshow(urban_raster, cmap="gray")
+plt.title("Urban Raster with NoData Pixels")
+plt.colorbar()
+plt.show()
+
+
 
 # Print statistics
 print(f"Total Area of Raster (km²): {total_area_km2}")
+print(f"Total number of pixels: {total_pixels}")
 print(f"Total Urban Clusters: {num_clusters}")
 print(f"Total Urban Area (m²): {total_area}")
 print(f"Average Mean Cluster Size (m²): {average_mean_cluster_size}")
