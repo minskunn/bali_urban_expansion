@@ -50,3 +50,21 @@ Feature importance analysis showed weak predictive power.
 The models struggled to differentiate growth patterns.
 The model could not find significant new urbanization trends
 2029 Output was Identical to 2024 
+
+Switching to Clustering Analysis
+Given the limitations of predictive modeling, the focus shifted to clustering analysis to better understand the spatial distribution of urbanized areas in Uluwatu.
+
+Methodology
+
+This clustering analysis focuses on identifying and quantifying urban clusters. The methodology involves reprojecting raster data, extracting urban areas, and clustering urban pixels to assess urbanization patterns.
+
+1. Data Preprocessing
+Reprojection to Local CRS: The classified raster (Classified2024_clean.tif) was reprojected to EPSG:32750 (UTM Zone 50S) to ensure accurate spatial measurements.
+Handling NoData Values: NoData values were masked to avoid errors in analysis.
+Pixel Size Calculation: The resolution of the raster was used to determine the real-world area of each pixel (in square meters).
+
+3. Urban Cluster Identification
+Binary Classification: Urban areas were extracted by converting the raster into a binary mask (1 = urban, 0 = non-urban).
+Connected Component Labeling: An 8-connectivity structure was applied to label and identify urban clusters (i.e., contiguous urban areas).
+Cluster Size Calculation: The number of pixels in each cluster was converted into real-world area (m² and km²).
+
